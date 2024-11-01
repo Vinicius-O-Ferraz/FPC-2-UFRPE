@@ -1,11 +1,9 @@
 public class BinaryTree {
     Node root;
 
-    public BinaryTree() {
-        root = null;
-    }
+    public BinaryTree() {root = null;}
 
-    public void insert(int key) {root = insertRec(root, key);}
+    public void insert(int key) {root = insertRec(root, key);} // O(log n).
 
     private Node insertRec(Node root, int key) {
         if (root == null) {
@@ -18,9 +16,7 @@ public class BinaryTree {
         return root;
     }
 
-    public void inorder() {
-        inorderRec(root);
-    }
+    public void inorder() {inorderRec(root);}
 
     private void inorderRec(Node root) {
         if (root != null) {
@@ -60,6 +56,59 @@ public class BinaryTree {
         if (root.right == null){return root.key;}
 
         return findMaxRec(root.right);
+    }
+
+    private Node searchNode(Node root, int key) {
+        if (root == null || root.key == key ){return root;}
+
+        if (key < root.key){return searchNode(root.left, key);}
+
+        else{return searchNode(root.right, key);}
+    }
+    public int treeSuccessor(int key) {
+        Node current = searchNode(root, key);
+        if (current == null) {
+            throw new IllegalArgumentException("Key not found in tree");
+        }
+
+        if (current.right != null) {
+            return findMinRec(current.right); // Sucessor é o menor da subárvore à direita
+        }
+
+        Node successor = null;
+        Node ancestor = root;
+        while (ancestor != current) {
+            if (current.key < ancestor.key) {
+                successor = ancestor;
+                ancestor = ancestor.left;
+            } else {
+                ancestor = ancestor.right;
+            }
+        }
+        return successor != null ? successor.key : -1; // Retorna -1 se não houver sucessor
+    }
+
+    public int treePredecessor(int key) {
+        Node current = searchNode(root, key);
+        if (current == null) {
+            throw new IllegalArgumentException("Key not found in tree");
+        }
+
+        if (current.left != null) {
+            return findMaxRec(current.left); // Predecessor é o maior da subárvore à esquerda
+        }
+
+        Node predecessor = null;
+        Node ancestor = root;
+        while (ancestor != current) {
+            if (current.key > ancestor.key) {
+                predecessor = ancestor;
+                ancestor = ancestor.right;
+            } else {
+                ancestor = ancestor.left;
+            }
+        }
+        return predecessor != null ? predecessor.key : -1; // Retorna -1 se não houver predecessor
     }
 }
 

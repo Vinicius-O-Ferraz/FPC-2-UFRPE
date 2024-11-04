@@ -1,3 +1,5 @@
+import javax.print.DocFlavor;
+
 public class BinaryTree {
     Node root;
 
@@ -65,6 +67,7 @@ public class BinaryTree {
 
         else{return searchNode(root.right, key);}
     }
+
     public int treeSuccessor(int key) {
         Node current = searchNode(root, key);
         if (current == null) {
@@ -108,7 +111,78 @@ public class BinaryTree {
                 ancestor = ancestor.left;
             }
         }
-        return predecessor != null ? predecessor.key : -1; // Retorna -1 se não houver predecessor
+        return predecessor != null ? predecessor.key : -1 ;
+    }
+
+
+
+    public boolean remove(int key){
+        if (root == null) {throw new IllegalArgumentException("Key not found in tree");}
+
+        Node current = root;
+        Node parent = root;
+        boolean leftSon = true;
+
+        while (current.key != key) {
+            parent = current;
+
+            if (key < current.key){
+                current = current.left;
+                leftSon = true;
+            }
+
+            else {
+                current = current.right;
+                leftSon = false;
+            }
+            if (current == null){
+                return false;
+            }
+        }
+
+        if (current.left == null && current.right == null) {
+            if (current == root) {root = null;}
+            else if (leftSon) {parent.left = null;}
+            else {parent.right = null;}
+        }
+
+        else if (current.right == null){
+            if (current == root) {root = current.left;}
+            else if (leftSon) {parent.left = current.left;}
+            else {parent.right =  current.left;}
+        }
+
+        else if (current.left == null) {
+            if (current == root) {root = current.right;}
+            else if (leftSon) {parent.left = current.right;}
+            else {parent.right =  current.right;}
+        }
+        else {
+                Node successor = getSuccessor(current);
+
+                current.key = successor.key;
+
+                // Remover o sucessor da sua posição original
+                if (current.right == successor) {
+                    current.right = successor.right;
+                } else {
+                    Node successorParent = current;
+                    while (successorParent.left != successor) {
+                        successorParent = successorParent.left;
+                    }
+                    successorParent.left = successor.right;
+                }
+            }
+        return true;
+    }
+
+    private Node getSuccessor(Node node) {
+        Node successor = node.right;
+        while (successor.left != null) {
+            successor = successor.left;
+        }
+        return successor;
     }
 }
+
 

@@ -1,4 +1,5 @@
-import javax.print.DocFlavor;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class BinaryTree {
     Node root;
@@ -17,6 +18,30 @@ public class BinaryTree {
         else if (key > root.key){root.right = insertRec(root.right, key);}
         return root;
     }
+
+    public void print() {
+        if (root == null) {
+            System.out.println("A árvore está vazia.");
+            return;
+        }
+
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            Node current = queue.poll();
+            System.out.print(current.key + " ");
+
+            if (current.left != null) {
+                queue.add(current.left);
+            }
+            if (current.right != null) {
+                queue.add(current.right);
+            }
+        }
+        System.out.println();
+    }
+
 
     public void inorder() {inorderRec(root);}
 
